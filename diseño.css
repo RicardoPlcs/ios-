@@ -1,0 +1,1784 @@
+/*   hace que el tamaño total de los elementos incluya el padding y el borde hace que las medidas sean más fáciles. */
+* {
+  box-sizing: border-box;
+}
+
+/* Estilos generales de toda la página. quita márgenes, con una fuente simple y fondo .*/
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #dceeff, #f6f7fb);
+  color: #172033;
+}
+
+/* Todos los botones con la misma fuente que el resto de la página con el cursor que muestra una manita al pasar el mouse.*/
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Escenario principal, para centrar el teléfono en la pantalla del navegador.*/
+.escenario {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* Marco negro del teléfono, tamaño del iPhone simulado. */
+.telefono {
+  width: 390px;
+  height: 820px;
+  padding: 14px;
+  border-radius: 54px;
+  background: #11151d;
+  box-shadow: 0 22px 70px rgba(20, 27, 43, 0.28);
+}
+
+/* Pantalla interna del teléfono. */
+.pantalla {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 42px;
+  background: #f6f7fb;
+}
+
+/* Isla dinámica negra de la parte superior (barra de enmedio en los iphone) */
+.isla-dinamica {
+  position: absolute;
+  z-index: 20;
+  top: 14px;
+  left: 50%;
+  width: 118px;
+  height: 34px;
+  transform: translateX(-50%);
+  border-radius: 18px;
+  background: #08090d;
+}
+
+/* Barra de estado superior es la hora, señal y batería.*/
+.barra-estado {
+  position: absolute;
+  z-index: 18;
+  top: 18px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/*  tres pantallas principales: bloqueo, inicio y vista de apps y por defecto están ocultas.*/
+.pantalla-bloqueo,
+.pantalla-inicio,
+.vista-app {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+/* muestra la pantalla que tenga "pantalla activa" será visible.*/
+.pantalla-activa {
+  display: block;
+}
+
+/* Pantalla de bloqueo con fondo degradado y texto blanco.*/
+.pantalla-bloqueo {
+  color: white;
+  padding: 74px 24px 28px;
+  background: linear-gradient(135deg, #2487ff 0%, #32d296 48%, #ffbd45 100%);
+}
+
+/* Contenedor de fecha y hora en la pantalla de bloqueo.*/
+.bloqueo-encabezado {
+  text-align: center;
+}
+
+/* Texto de la fecha.*/
+.bloqueo-encabezado p {
+  margin: 0 0 8px;
+  font-weight: bold;
+}
+
+/*  Hora grande de la pantalla de bloqueo.*/
+.bloqueo-encabezado h1 {
+  margin: 0;
+  font-size: 72px;
+  line-height: 0.95;
+}
+
+/* 
+  Panel inferior donde está el desbloqueo por PIN con efecto tipo vidrio.*/
+.panel-desbloqueo {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 26px;
+  padding: 16px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(20px);
+}
+
+
+
+/* Contenedor de los cuatro puntos del PIN. */
+.puntos-pin {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0 12px;
+}
+
+/* Cada puntito del PIN */
+.puntos-pin span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid white;
+}
+
+/* Cuando el usuario escribe un número, el puntito se rellena.*/
+.puntos-pin span.relleno {
+  background: white;
+}
+/* Teclado numérico del PIN.
+   Se acomoda en una cuadrícula de 3 columnas. */
+.teclado-pin {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+
+/* Botones del teclado PIN con fondo para combinar con el panel. */
+.teclado-pin button {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: white;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Estilo individual de cada botón del teclado PIN. */
+.teclado-pin button {
+  height: 45px;
+  border-radius: 18px;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+
+/* Mensaje pequeño debajo del desbloqueo para mostrar instrucciones o errores. */
+.mensaje-ayuda {
+  min-height: 19px;
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Pantalla de inicio del simulador con un fondo degradado parecido al de iphone. */
+.pantalla-inicio {
+  padding: 66px 20px 22px;
+  background: linear-gradient(145deg, #0a84ff 0%, #40c8e0 42%, #ff9f0a 100%);
+}
+
+/* Capa encima del fondo para profundidad visual. */
+.capa-fondo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 20, 36, 0.18),
+    rgba(10, 20, 36, 0.08)
+  );
+  pointer-events: none;
+}
+
+/* Encabezado de la pantalla de inicio. */
+.inicio-encabezado {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Texto pequeño usado en encabezados. */
+.texto-pequeno {
+  margin: 0 0 2px;
+  color: inherit;
+  opacity: 0.72;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Títulos principales dentro del teléfono. */
+h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+/* Botones circulares de acciones para bloquear, volver y cerrar apps. */
+.boton-icono {
+  min-width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.22);
+  font-weight: bold;
+}
+
+/* Cuadrícula donde aparecen las apps instaladas. */
+.cuadricula-apps {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 17px 12px;
+}
+
+/* Botón completo de cada aplicación. */
+.icono-app {
+  border: 0;
+  background: transparent;
+  color: white;
+  text-align: center;
+  min-width: 0;
+}
+
+/* Burbuja visual de la app. */
+.burbuja-app {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 7px;
+  border-radius: 18px;
+  color: white;
+  box-shadow: 0 10px 22px rgba(31, 45, 72, 0.22);
+  font-weight: bold;
+  font-size: 17px;
+}
+
+/* Texto debajo de cada icono de app. */
+.icono-app span:last-child {
+  display: block;
+  max-width: 72px;
+  margin: 0 auto;
+  font-size: 11px;
+  font-weight: bold;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+/* Colores individuales para las apps del sistema. */
+.appstore {
+  background: linear-gradient(135deg, #0a84ff, #40c8e0);
+}
+
+.procesos {
+  background: linear-gradient(135deg, #34c759, #64d2ff);
+}
+
+.memoria {
+  background: linear-gradient(135deg, #ff9f0a, #ff453a);
+}
+
+.archivos {
+  background: linear-gradient(135deg, #ffd60a, #ff9f0a);
+}
+
+.camara {
+  background: linear-gradient(135deg, #323237, #08090d);
+}
+
+.fotos {
+  background: linear-gradient(135deg, #ff375f, #ffcc00, #34c759, #0a84ff);
+}
+
+.notas {
+  color: #29220d;
+  background: linear-gradient(180deg, #fffdfa 26%, #ffd60a 27%, #ffd60a 100%);
+}
+
+.entrada-salida {
+  background: linear-gradient(135deg, #00a7a0, #0a84ff);
+}
+
+.seguridad {
+  background: linear-gradient(135deg, #ff375f, #bf5af2);
+}
+
+.ajustes {
+  background: linear-gradient(135deg, #8e8e93, #3a3a3c);
+}
+
+/* Dock inferior del iphone barra transparente donde van apps importantes. */
+.dock {
+  position: absolute;
+  z-index: 2;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(20px);
+}
+
+/* quita el margen inferior del dock de la burbuja,ya que ahí no mostramos texto debajo. */
+.dock .burbuja-app {
+  margin-bottom: 0;
+}
+
+/* Oculta el texto de las apps dentro del dock. */
+.dock .icono-app span:last-child {
+  display: none;
+}
+
+/* Vista donde se abre cualquier app pantalla blanca encima del home. */
+.vista-app {
+  padding: 66px 16px 18px;
+  background: #f6f7fb;
+}
+
+/* Encabezado de la app abierta con botón de volver, título y botón cerrar. */
+.app-encabezado {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Botones del encabezado cuando estamos dentro de una app. */
+.app-encabezado .boton-icono {
+  color: #172033;
+  background: #e7ebf2;
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* Contenedor donde JavaScript dibuja el contenido de cada app. */
+.contenido-app {
+  height: calc(100% - 68px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+/* Tarjetas o secciones dentro de las apps. */
+.tarjeta {
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Títulos dentro de las tarjetas. */
+.tarjeta h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+/* Contenedor vertical para separar elementos. */
+.lista-vertical {
+  display: grid;
+  gap: 10px;
+}
+
+/* Botón principal para acciones importantes. */
+.boton-principal {
+  min-height: 38px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 13px;
+  color: white;
+  background: #0a84ff;
+  font-weight: bold;
+}
+
+/* Botón secundario para acciones normales. */
+.boton-gris {
+  min-height: 38px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 13px;
+  color: #172033;
+  background: #e8edf5;
+  font-weight: bold;
+}
+
+/* Mensajes de alerta y explicación dentro de las apps. */
+.alerta {
+  border-left: 4px solid #ff9f0a;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff7e6;
+  color: #5c3b00;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Mensaje que aparece cuando hay muchos intentos fallidos.*/
+.mensaje-bloqueo-temporal {
+  min-height: 20px;
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+/* Fila visual para cada proceso dentro de la app Procesos. */
+.fila-proceso {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Texto secundario del proceso. */
+.fila-proceso p {
+  margin: 3px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+/* Estado actual del proceso. */
+.estado-proceso {
+  padding: 5px 8px;
+  border-radius: 20px;
+  color: white;
+  background: #30d158;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* Memoria y prioridad del proceso. */
+.fila-proceso small {
+  grid-column: 1 / -1;
+  color: #6c7485;
+  font-weight: bold;
+}
+
+/* Subtarea que pertenece a una aplicacion. */
+.fila-subtarea {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  padding: 10px;
+  border-left: 4px solid #ffcc00;
+  border-radius: 8px;
+  background: white;
+}
+
+.fila-subtarea p {
+  margin: 3px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.fila-subtarea small {
+  grid-column: 1 / -1;
+  color: #6c7485;
+  font-weight: bold;
+}
+/* Barra visual para mostrar el almacenamiento. */
+.barra-almacenamiento {
+  display: flex;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #e8edf5;
+}
+
+/* Cada parte de la barra de almacenamiento. */
+.barra-almacenamiento span {
+  display: block;
+  height: 100%;
+}
+
+/* Fila de cada categoría de almacenamiento. */
+.fila-almacenamiento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Punto de color para cada categoría. */
+.punto-almacenamiento {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+/* Fila de cada app dentro de la tienda. */
+.fila-tienda {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Icono pequeño de cada app en la tienda. */
+.icono-tienda {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Texto secundario dentro de la tienda. */
+.fila-tienda p {
+  margin: 3px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+/* Cambia la barra de estado a color oscuro en pantallas claras. */
+.barra-estado.oscura {
+  color: #11151d;
+}
+/* Lista principal de opciones dentro de Ajustes. */
+.lista-ajustes {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Fila parecida a las opciones del iPhone. */
+.fila-ajuste {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Texto secundario del perfil en Ajustes. */
+.fila-ajuste p {
+  margin: 3px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+/* Resalta la primera fila del perfil. */
+.perfil-ajuste {
+  min-height: 62px;
+}
+/* Botón dentro de Ajustes para abrir una opción. */
+.boton-ajuste {
+  width: 100%;
+  color: #172033;
+  font-size: 14px;
+}
+
+/* Botón para volver al listado principal de Ajustes. */
+.boton-volver-ajustes {
+  width: 100%;
+  margin-top: 12px;
+}
+/* Icono pequeño para las opciones de Ajustes. */
+.icono-ajuste {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  margin-right: 10px;
+  border-radius: 7px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Colores de iconos en Ajustes. */
+.icono-ajuste.naranja {
+  background: #ff9f0a;
+}
+
+.icono-ajuste.azul {
+  background: #0a84ff;
+}
+
+.icono-ajuste.verde {
+  background: #30d158;
+}
+
+/* Switch visual para modo de vuelo. */
+.switch-ajuste {
+  width: 52px;
+  height: 30px;
+  border-radius: 20px;
+  background: #d1d1d6;
+  position: relative;
+}
+
+/* Circulo del switch visual. */
+.switch-ajuste::before {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  background: white;
+}
+.icono-ajuste.gris {
+  background: #8e8e93;
+}
+/* Fila de información dentro de Seguridad. */
+.fila-seguridad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(22, 31, 49, 0.12);
+}
+
+/* Ultima fila sin linea inferior. */
+.fila-seguridad:last-child {
+  border-bottom: 0;
+}
+
+/* Selector del usuario que inicia sesion. */
+.selector-usuario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.selector-usuario button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  color: #172033;
+  background: #e8edf5;
+  font-weight: bold;
+}
+
+.selector-usuario button.activo {
+  color: white;
+  background: #0a84ff;
+}
+
+/* Formulario de acceso para validar los permisos. */
+.login-seguridad {
+  display: grid;
+  gap: 9px;
+}
+
+.login-seguridad input {
+  min-height: 38px;
+  border: 1px solid #d5dbe5;
+  border-radius: 8px;
+  padding: 0 11px;
+  color: #172033;
+  background: #f7f8fb;
+  font-family: inherit;
+}
+
+.login-seguridad small {
+  color: #6c7485;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.mensaje-login {
+  margin: 0;
+  padding: 9px;
+  border-radius: 8px;
+  color: #174867;
+  background: #e8f1ff;
+  font-size: 12px;
+  font-weight: bold;
+}
+/* Color del icono para abrir apps recientes. */
+.recientes {
+  background: linear-gradient(135deg, #5856d6, #af52de);
+}
+
+/* Tarjeta de cada app que queda en recientes. */
+.tarjeta-reciente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Texto secundario dentro de recientes. */
+.tarjeta-reciente p {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+/* Botón para cerrar una app reciente. */
+.boton-cerrar-reciente {
+  min-height: 34px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 12px;
+  color: white;
+  background: #ff453a;
+  font-weight: bold;
+}
+/* Estado cuando una app fue movida a memoria virtual. */
+.estado-proceso.virtual {
+  background: #ff9f0a;
+}
+
+/* Fila de cada dispositivo conectado al iPhone. */
+.fila-dispositivo {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Icono que representa cada dispositivo. */
+.icono-dispositivo {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  grid-row: span 2;
+  border-radius: 10px;
+  background: #eef5ff;
+  font-size: 22px;
+}
+
+/* Textos pequeños del dispositivo y su controlador. */
+.fila-dispositivo p,
+.fila-dispositivo small,
+.texto-dispositivo {
+  margin: 3px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+/* Estado visual de conexion de un dispositivo. */
+.estado-dispositivo {
+  padding: 5px 7px;
+  border-radius: 18px;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.estado-dispositivo.conectado {
+  background: #30d158;
+}
+
+.estado-dispositivo.desconectado {
+  background: #8e8e93;
+}
+
+/* Boton que cambia la conexion del dispositivo. */
+.boton-conexion {
+  grid-column: 2 / -1;
+  min-height: 34px;
+  border: 0;
+  border-radius: 9px;
+  color: white;
+  background: #0a84ff;
+  font-weight: bold;
+}
+
+/* Pantalla oscura que contiene el visor de la camara. */
+.camara-contenido {
+  min-height: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: #08090d;
+}
+
+/* Visor que simula la imagen antes de tomar la foto. */
+.visor-camara {
+  position: relative;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #7fc3ea;
+}
+
+.cielo-camara {
+  position: absolute;
+  inset: 0 0 34%;
+  background: linear-gradient(180deg, #5cb8ef, #ffd38e);
+}
+
+.sol-camara {
+  position: absolute;
+  top: 72px;
+  right: 48px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #fff1b3;
+}
+
+.montana-camara {
+  position: absolute;
+  bottom: 118px;
+  width: 230px;
+  height: 170px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.montana-camara.una {
+  left: -34px;
+  background: #203b55;
+}
+
+.montana-camara.dos {
+  right: -44px;
+  bottom: 98px;
+  background: #294b59;
+}
+
+.piso-camara {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 125px;
+  background: #28695e;
+}
+
+/* Cuadro central que simula el enfoque de la camara. */
+.enfoque-camara {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  width: 62px;
+  height: 62px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+}
+
+.mensaje-camara {
+  min-height: 28px;
+  margin: 10px 0;
+  color: #e8edf5;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* Controles inferiores para capturar o abrir la ultima foto. */
+.controles-camara {
+  display: grid;
+  grid-template-columns: 54px 1fr 54px;
+  align-items: center;
+  gap: 18px;
+}
+
+.boton-tomar-foto {
+  justify-self: center;
+  width: 66px;
+  height: 66px;
+  border: 5px solid #f6f7fb;
+  border-radius: 50%;
+  background: #f6f7fb;
+  box-shadow: inset 0 0 0 3px #08090d;
+}
+
+.boton-cambiar-camara {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background: #24262c;
+  font-size: 25px;
+}
+
+.miniatura-vacia,
+.miniatura-foto {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #565963;
+  border-radius: 7px;
+  background: #24262c;
+}
+
+.miniatura-foto {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.miniatura-foto span {
+  display: none;
+}
+
+/* Galeria donde se muestran las fotos tomadas. */
+.app-fotos {
+  display: grid;
+  gap: 10px;
+}
+
+.selector-album {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #e8edf5;
+}
+
+.selector-album button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 8px;
+  color: #566174;
+  background: transparent;
+  font-weight: bold;
+}
+
+.selector-album button.activo {
+  color: #172033;
+  background: white;
+}
+
+.resumen-fotos p,
+.galeria-vacia p {
+  margin: 5px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.cuadricula-fotos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+
+.foto-galeria {
+  position: relative;
+  min-height: 102px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.foto-galeria span {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  overflow: hidden;
+  color: white;
+  font-size: 9px;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.galeria-vacia {
+  grid-column: 1 / -1;
+}
+
+/* Pantallas de lista y editor dentro de Documentos. */
+.app-documentos {
+  display: grid;
+  gap: 10px;
+}
+
+.barra-documentos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.barra-documentos h3 {
+  margin: 0;
+}
+
+.barra-documentos p,
+.documento-vacio p {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.boton-nuevo-documento {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background: #ff9500;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.tarjeta-documento {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+.tarjeta-documento p {
+  margin: 5px 0;
+  color: #566174;
+  font-size: 12px;
+}
+
+.tarjeta-documento small {
+  color: #6c7485;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.acciones-documento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.acciones-documento button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 8px;
+  color: #0a84ff;
+  background: #e8f1ff;
+  font-weight: bold;
+}
+
+.acciones-documento .eliminar {
+  color: #ff3b30;
+  background: #ffeceb;
+}
+
+.editor-documento {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+.contenido-documento {
+  min-height: 260px;
+  resize: none;
+  border: 1px solid #e2e7ef;
+  border-radius: 8px;
+  padding: 10px;
+  color: #172033;
+  background: #f8f9fc;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+/* Contenedor y filas de carpetas en Archivos. */
+.explorador-archivos {
+  display: grid;
+  gap: 10px;
+}
+
+.buscador-archivos {
+  min-height: 34px;
+  padding: 9px 12px;
+  border-radius: 18px;
+  color: #6c7485;
+  background: #e8ebf2;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Titulos de favoritos, ubicaciones y etiquetas. */
+.titulo-grupo-archivos {
+  margin: 10px 3px 0;
+  font-size: 16px;
+}
+
+.grupo-archivos {
+  overflow: hidden;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+.grupo-archivos .fila-carpeta {
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(22, 31, 49, 0.1);
+}
+
+.grupo-archivos .fila-carpeta:last-child {
+  border-bottom: 0;
+}
+
+/* Filas decorativas de etiquetas dentro de Archivos. */
+.fila-etiqueta {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  min-height: 43px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(22, 31, 49, 0.1);
+}
+
+.fila-etiqueta:last-child {
+  border-bottom: 0;
+}
+
+.cabecera-archivos p,
+.archivo-vacio p {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.fila-carpeta {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  color: #172033;
+  background: white;
+  text-align: left;
+}
+
+.fila-carpeta p {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.icono-carpeta {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #e8f1ff;
+  font-size: 21px;
+}
+
+.icono-carpeta.nube {
+  background: #eef2f7;
+}
+
+.icono-carpeta.protegido {
+  background: #fff2d6;
+}
+
+.punto-etiqueta {
+  width: 14px;
+  height: 14px;
+  margin: 13px;
+  border-radius: 50%;
+}
+
+.punto-etiqueta.rojo {
+  background: #ff453a;
+}
+
+.punto-etiqueta.naranja {
+  background: #ff9f0a;
+}
+
+.punto-etiqueta.amarillo {
+  background: #ffd60a;
+}
+
+.punto-etiqueta.verde {
+  background: #34c759;
+}
+
+.punto-etiqueta.azul {
+  background: #0a84ff;
+}
+
+.punto-etiqueta.morado {
+  background: #bf5af2;
+}
+
+.punto-etiqueta.gris {
+  background: #8e8e93;
+}
+
+/* Circulos sin color para etiquetas personales. */
+.punto-etiqueta.personal {
+  border: 1px solid #a2a8b2;
+  background: white;
+}
+
+.ruta-volver {
+  justify-self: start;
+  min-height: 32px;
+  border: 0;
+  color: #0a84ff;
+  background: transparent;
+  font-weight: bold;
+}
+
+/* Archivo de fotografia guardado dentro de la carpeta Camara. */
+.archivo-foto {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 68px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  color: #172033;
+  background: white;
+  text-align: left;
+}
+
+.archivo-documento {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+.archivo-documento.sin-borde {
+  padding: 0;
+  border: 0;
+}
+
+.archivo-documento p,
+.archivo-documento small {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.icono-documento {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  color: #ff9500;
+  background: #fff0da;
+  font-size: 22px;
+}
+
+.archivo-foto p,
+.archivo-foto small {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.vista-foto {
+  width: 68px;
+  height: 62px;
+  border-radius: 7px;
+}
+
+/* Detalle, permiso y botones de un archivo abierto. */
+.detalle-archivo {
+  text-align: center;
+}
+
+.detalle-archivo .vista-foto.grande {
+  width: 100%;
+  height: 152px;
+  margin-bottom: 12px;
+}
+
+.detalle-archivo p,
+.permiso-archivo p,
+.permiso-archivo small,
+.carpeta-informativa p,
+.carpeta-informativa small {
+  display: block;
+  margin: 6px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.acciones-archivo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.acciones-archivo button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 10px;
+  color: white;
+  background: #0a84ff;
+  font-weight: bold;
+}
+
+.acciones-archivo .eliminar {
+  color: #ff3b30;
+  background: #ffeceb;
+}
+
+/* Acciones de una foto dentro de eliminados recientemente. */
+.archivo-eliminado {
+  padding: 10px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+.archivo-eliminado .archivo-foto {
+  padding: 0;
+  border: 0;
+}
+
+.acciones-eliminado {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.acciones-eliminado button {
+  min-height: 35px;
+  border: 0;
+  border-radius: 8px;
+  color: #0a84ff;
+  background: #e8f1ff;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.acciones-eliminado .eliminar {
+  color: #ff3b30;
+  background: #ffeceb;
+}
+
+.mensaje-archivo {
+  margin: 0;
+  padding: 9px;
+  border-radius: 8px;
+  color: #116233;
+  background: #e9f8ee;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.carpeta-informativa {
+  text-align: center;
+  padding: 24px 18px;
+}
+
+.carpeta-informativa span {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 34px;
+}
+
+.foto-amanecer {
+  background: linear-gradient(155deg, #55b4ed 0%, #ffd08b 52%, #236459 53%);
+}
+
+.foto-azul {
+  background: linear-gradient(155deg, #69bdef 0%, #f6da95 48%, #174867 49%);
+}
+
+.foto-rosa {
+  background: linear-gradient(155deg, #ed8b98 0%, #ffd28e 48%, #304c62 49%);
+}
+
+/* Pantallas de carpetas y edicion dentro de Notas. */
+.app-notas {
+  display: grid;
+  gap: 10px;
+}
+
+.encabezado-notas p,
+.barra-notas p,
+.nota-vacia p {
+  margin: 4px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.fila-nota-carpeta {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 13px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+  color: #172033;
+  text-align: left;
+}
+
+.fila-nota-carpeta span {
+  font-size: 21px;
+}
+
+.fila-nota-carpeta p {
+  margin: 3px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+.fila-nota-carpeta small {
+  color: #6c7485;
+  font-weight: bold;
+}
+
+.barra-notas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.barra-notas h3 {
+  margin: 0;
+}
+
+.boton-nueva-nota {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  color: #172033;
+  background: #ffd60a;
+  font-size: 29px;
+}
+
+.tarjeta-nota {
+  padding: 12px;
+  border: 1px solid rgba(22, 31, 49, 0.12);
+  border-radius: 8px;
+  background: white;
+}
+
+.tarjeta-nota p {
+  margin: 7px 0;
+  color: #172033;
+  font-size: 13px;
+}
+
+.tarjeta-nota small {
+  color: #6c7485;
+  font-size: 11px;
+}
+
+.editor-nota {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  background: white;
+}
+
+.titulo-nota,
+.contenido-nota {
+  width: 100%;
+  border: 0;
+  outline: none;
+  font-family: inherit;
+  color: #172033;
+  background: transparent;
+}
+
+.titulo-nota {
+  border-bottom: 1px solid #e8edf5;
+  padding: 8px 0;
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.contenido-nota {
+  min-height: 270px;
+  resize: none;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.boton-guardar-nota {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  color: #172033;
+  background: #ffd60a;
+  font-weight: bold;
+}
+
+.carpeta-protegida {
+  text-align: center;
+  padding: 28px 18px;
+}
+
+.carpeta-protegida span {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 38px;
+}
+
+.carpeta-protegida p,
+.carpeta-protegida small {
+  display: block;
+  margin: 7px 0 0;
+  color: #6c7485;
+  font-size: 12px;
+}
+
+/* Texto de los contadores de memoria. */
+.texto-memoria {
+  margin: 10px 0 6px;
+  color: #6c7485;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Orden de uso que ocupa la politica LRU. */
+.orden-lru {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.chip-lru {
+  padding: 6px 8px;
+  border-radius: 18px;
+  background: #e8f1ff;
+  color: #174867;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.chip-lru.virtual {
+  background: #fff0d4;
+  color: #8d5500;
+}
+
+.evento-lru {
+  margin: 11px 0 0;
+  padding: 9px;
+  border-radius: 8px;
+  background: #eef8f1;
+  color: #19643b;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Marcos donde se colocan las apps que quedan en RAM. */
+.mapa-marcos,
+.mapa-paginas {
+  display: grid;
+  gap: 7px;
+}
+
+.marco-memoria,
+.pagina-virtual {
+  display: grid;
+  grid-template-columns: 82px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border-radius: 8px;
+}
+
+.marco-memoria.ocupado {
+  background: #e8f1ff;
+}
+
+.marco-memoria.libre {
+  background: #f1f3f7;
+  color: #6c7485;
+}
+
+.pagina-virtual {
+  background: #fff0d4;
+  color: #553c10;
+}
+
+.marco-memoria small,
+.pagina-virtual small {
+  color: #6c7485;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.marco-memoria p,
+.pagina-virtual p,
+.pagina-vacia {
+  margin: 0;
+  color: #6c7485;
+  font-size: 11px;
+}
+
+.pagina-vacia {
+  padding: 9px;
+  border-radius: 8px;
+  background: #f1f3f7;
+}
+
+/* Mantiene las apps descargadas dentro de la cuadricula. */
+.apps-instaladas-inicio {
+  display: contents;
+}
+
+/* Barra que simula instalación o eliminación en App Store. */
+.progreso-tienda {
+  width: 100%;
+  height: 4px;
+  margin-top: 7px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #e8edf5;
+}
+
+/* Movimiento de descarga dentro de App Store. */
+.progreso-tienda span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: #0a84ff;
+  animation: descargar 0.7s linear infinite;
+}
+
+@keyframes descargar {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
+}
+/* Agrupa actualizar y eliminar dentro de App Store. */
+.acciones-tienda {
+  display: grid;
+  gap: 5px;
+}
+
+/* Reduce los botones dobles para que entren en pantalla. */
+.acciones-tienda button {
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+/* Cuadro que muestra cual proceso esta usando la CPU. */
+.cpu-actual {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #eef5ff;
+  color: #172033;
+}
+
+/* Explica la decision actual del planificador. */
+.dato-planificador {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #eef8f1;
+}
+
+.dato-planificador p {
+  margin: 5px 0 0;
+  color: #476451;
+  font-size: 12px;
+}
+
+/* Leyenda visual de los cinco estados de un proceso. */
+.leyenda-estados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.leyenda-estados span {
+  padding: 4px 7px;
+  border-radius: 16px;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* Colores para identificar el ciclo de vida del proceso. */
+.estado-proceso.nuevo,
+.leyenda-estados .nuevo {
+  background: #8e8e93;
+}
+
+.estado-proceso.listo,
+.leyenda-estados .listo {
+  background: #0a84ff;
+}
+
+.estado-proceso.ejecucion,
+.leyenda-estados .ejecucion {
+  background: #30d158;
+}
+
+.estado-proceso.bloqueado,
+.leyenda-estados .bloqueado {
+  background: #ff9f0a;
+}
+
+.estado-proceso.terminado,
+.leyenda-estados .terminado {
+  background: #ff375f;
+}

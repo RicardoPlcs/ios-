@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Simulador de iOS</title>
+
+  <link rel="stylesheet" href="diseño.css" />
+</head>
+
+<body>
+
+  <main class="escenario">
+
+    <section class="telefono">
+
+      <div class="pantalla">
+
+        <div class="isla-dinamica"></div>
+
+        <div class="barra-estado">
+          <span id="horaBarra">09:41</span>
+          <span>5G 100%</span>
+        </div>
+
+        <!-- Pantalla de bloqueo -->
+        <section id="pantallaBloqueo" class="pantalla-bloqueo pantalla-activa">
+
+          <div class="bloqueo-encabezado">
+            <p id="fechaBloqueo">Domingo, 17 de mayo</p>
+            <h1 id="horaBloqueo">09:41</h1>
+          </div>
+
+          <div class="panel-desbloqueo">
+
+            <div id="desbloqueoPin" class="modo-desbloqueo activo">
+
+              <div class="puntos-pin">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <div class="teclado-pin">
+                <button data-tecla="1">1</button>
+                <button data-tecla="2">2</button>
+                <button data-tecla="3">3</button>
+
+                <button data-tecla="4">4</button>
+                <button data-tecla="5">5</button>
+                <button data-tecla="6">6</button>
+
+                <button data-tecla="7">7</button>
+                <button data-tecla="8">8</button>
+                <button data-tecla="9">9</button>
+
+                <button data-tecla="limpiar">C</button>
+                <button data-tecla="0">0</button>
+                <button data-tecla="borrar">⌫</button>
+              </div>
+
+            </div>
+
+            <p id="mensajeDesbloqueo" class="mensaje-ayuda">
+                 PIN demo: 1234 </p>
+
+            <p id="mensajeBloqueoTemporal" class="mensaje-bloqueo-temporal"></p>
+
+
+          </div>
+
+        </section>
+
+        <!-- Pantalla de inicio -->
+        <section id="pantallaInicio" class="pantalla-inicio">
+
+          <div class="capa-fondo"></div>
+
+          <header class="inicio-encabezado">
+
+            <div>
+              <p class="texto-pequeno">Simulador iOS</p>
+              <h2>Inicio</h2>
+            </div>
+
+            <button id="botonBloquear" class="boton-icono">
+              Bloquear
+            </button>
+
+          </header>
+
+          <div id="cuadriculaApps" class="cuadricula-apps">
+
+            <button class="icono-app" data-app="appstore">
+              <span class="burbuja-app appstore">AS</span>
+              <span>App Store</span>
+            </button>
+
+            <button class="icono-app" data-app="procesos">
+              <span class="burbuja-app procesos">PR</span>
+              <span>Procesos</span>
+            </button>
+
+            <button class="icono-app" data-app="memoria">
+              <span class="burbuja-app memoria">DG</span>
+              <span>Diagnostico</span>
+            </button>
+
+            <button class="icono-app" data-app="archivos">
+              <span class="burbuja-app archivos">AR</span>
+              <span>Archivos</span>
+            </button>
+
+            <button class="icono-app" data-app="camara">
+              <span class="burbuja-app camara">CA</span>
+              <span>Camara</span>
+            </button>
+
+            <button class="icono-app" data-app="fotos">
+              <span class="burbuja-app fotos">FO</span>
+              <span>Fotos</span>
+            </button>
+
+            <button class="icono-app" data-app="entradaSalida">
+              <span class="burbuja-app entrada-salida">DI</span>
+              <span>Dispositivos</span>
+            </button>
+
+            <button class="icono-app" data-app="seguridad">
+              <span class="burbuja-app seguridad">SE</span>
+              <span>Seguridad</span>
+            </button>
+
+            <button class="icono-app" data-app="ajustes">
+              <span class="burbuja-app ajustes">AJ</span>
+              <span>Ajustes</span>
+            </button>
+
+            <button class="icono-app" data-app="recientes">
+              <span class="burbuja-app recientes">RC</span>
+              <span>Recientes</span>
+            </button>
+
+            <!-- Aqui aparecen las apps que se descargan desde App Store -->
+            <div id="appsInstaladasInicio" class="apps-instaladas-inicio"></div>
+
+          </div>
+
+          <nav class="dock">
+
+            <button class="icono-app" data-app="appstore">
+              <span class="burbuja-app appstore">AS</span>
+            </button>
+
+            <button class="icono-app" data-app="procesos">
+              <span class="burbuja-app procesos">PR</span>
+            </button>
+
+            <button class="icono-app" data-app="memoria">
+              <span class="burbuja-app memoria">DG</span>
+            </button>
+
+            <button class="icono-app" data-app="seguridad">
+              <span class="burbuja-app seguridad">SE</span>
+            </button>
+
+          </nav>
+
+        </section>
+
+        <!-- Vista de apps -->
+        <section id="vistaApp" class="vista-app">
+
+          <header class="app-encabezado">
+
+            <button id="botonVolverInicio" class="boton-icono">
+              ‹
+            </button>
+
+            <div>
+              <p id="subtituloApp" class="texto-pequeno">
+                App
+              </p>
+
+              <h2 id="tituloApp">
+                Titulo
+              </h2>
+            </div>
+
+            <button id="botonCerrarApp" class="boton-icono">
+              ×
+            </button>
+
+          </header>
+
+          <div id="contenidoApp" class="contenido-app">
+            <!-- Aqui JavaScript va a dibujar el contenido de cada app -->
+          </div>
+
+        </section>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="funciones.js"></script>
+</body>
+</html>
+
