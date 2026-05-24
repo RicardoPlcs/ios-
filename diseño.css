@@ -1,4 +1,4 @@
-/*   hace que el tamaño total de los elementos incluya el padding y el borde hace que las medidas sean más fáciles. */
+﻿/*   hace que el tamaño total de los elementos incluya el padding y el borde hace que las medidas sean más fáciles. */
 * {
   box-sizing: border-box;
 }
@@ -345,8 +345,8 @@ h2 {
   margin-bottom: 0;
 }
 
-/* Oculta el texto de las apps dentro del dock. */
-.dock .icono-app span:last-child {
+/* Oculta solo nombres del dock y deja visibles sus iconos. */
+.dock .icono-app > span:not(.burbuja-app) {
   display: none;
 }
 
@@ -371,6 +371,12 @@ h2 {
   background: #e7ebf2;
   font-size: 26px;
   line-height: 1;
+}
+
+/* Oculta la flecha cuando Archivos ya esta en Explorar. */
+.boton-volver-oculto {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Contenedor donde JavaScript dibuja el contenido de cada app. */
@@ -442,6 +448,52 @@ h2 {
   font-size: 12px;
   font-weight: bold;
   color: white;
+}
+
+/* Alerta interna del iPhone para mostrar permisos denegados. */
+.alerta-sistema {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  display: none;
+  place-items: center;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(3px);
+}
+
+.alerta-sistema.visible {
+  display: grid;
+}
+
+.cuadro-alerta-sistema {
+  width: 100%;
+  padding: 18px 16px 10px;
+  border-radius: 16px;
+  background: rgba(248, 248, 248, 0.96);
+  color: #172033;
+  text-align: center;
+}
+
+.cuadro-alerta-sistema h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+}
+
+.cuadro-alerta-sistema p {
+  margin: 0 0 14px;
+  font-size: 13px;
+}
+
+.cuadro-alerta-sistema button {
+  width: 100%;
+  min-height: 38px;
+  border: 0;
+  border-top: 1px solid #d3d5db;
+  color: #0a84ff;
+  background: transparent;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 /* Fila visual para cada proceso dentro de la app Procesos. */
@@ -674,6 +726,18 @@ h2 {
   border-bottom: 0;
 }
 
+/* Hora mostrada debajo de cada alerta de seguridad. */
+.fila-alerta-seguridad div {
+  display: grid;
+  gap: 4px;
+}
+
+.fila-alerta-seguridad small {
+  color: #6c7485;
+  font-size: 11px;
+  font-weight: bold;
+}
+
 /* Selector del usuario que inicia sesion. */
 .selector-usuario {
   display: grid;
@@ -796,6 +860,36 @@ h2 {
   margin: 3px 0 0;
   color: #6c7485;
   font-size: 12px;
+}
+
+/* Muestra claramente los dispositivos que usan un controlador. */
+.fila-dispositivo-proceso {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 9px;
+  align-items: center;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #eef8f1;
+}
+
+.fila-dispositivo-proceso span {
+  font-size: 22px;
+}
+
+.fila-dispositivo-proceso p {
+  margin: 3px 0 0;
+  color: #496854;
+  font-size: 12px;
+}
+
+.fila-dispositivo-proceso b {
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: white;
+  background: #30d158;
+  font-size: 10px;
 }
 
 /* Estado visual de conexion de un dispositivo. */
@@ -1104,6 +1198,22 @@ h2 {
   background: white;
 }
 
+.etiqueta-documento {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  color: #6c7485;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.etiqueta-documento .punto-etiqueta {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+}
+
 .contenido-documento {
   min-height: 260px;
   resize: none;
@@ -1163,6 +1273,13 @@ h2 {
   min-height: 43px;
   padding: 0 12px;
   border-bottom: 1px solid rgba(22, 31, 49, 0.1);
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  width: 100%;
+  color: inherit;
+  background: transparent;
+  text-align: left;
 }
 
 .fila-etiqueta:last-child {
@@ -1281,7 +1398,7 @@ h2 {
 
 .archivo-documento {
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 42px 1fr auto;
   align-items: center;
   gap: 10px;
   padding: 10px;
@@ -1300,6 +1417,85 @@ h2 {
   margin: 4px 0 0;
   color: #6c7485;
   font-size: 12px;
+}
+
+/* Controles para etiquetar o eliminar un documento. */
+.controles-archivo {
+  display: grid;
+  gap: 6px;
+}
+
+/* Muestra el circulo del color seleccionado junto a Etiqueta. */
+.vista-etiqueta-archivo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  border: 1px solid #d9dde6;
+  border-radius: 9px;
+  padding: 0 7px;
+  color: #172033;
+  background: white;
+  font-size: 11px;
+}
+
+.vista-etiqueta-archivo .punto-etiqueta {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  margin: 0;
+}
+
+.vista-etiqueta-archivo strong {
+  margin-left: auto;
+  color: #6c7485;
+}
+
+/* Lista desplegable con un circulo visible en cada color. */
+.opciones-etiqueta-archivo {
+  display: grid;
+  width: 116px;
+  border: 1px solid #d9dde6;
+  border-radius: 9px;
+  padding: 4px;
+  background: white;
+}
+
+.opcion-etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+  border: 0;
+  border-radius: 6px;
+  padding: 0 6px;
+  color: #172033;
+  background: transparent;
+  font-size: 11px;
+  text-align: left;
+}
+
+.opcion-etiqueta.activa {
+  color: white;
+  background: #0a84ff;
+}
+
+.opcion-etiqueta .punto-etiqueta {
+  width: 11px;
+  height: 11px;
+  margin: 0;
+}
+
+/* Boton para borrar un documento desde Archivos. */
+.boton-borrar-archivo {
+  min-height: 32px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 9px;
+  color: #ff3b30;
+  background: #ffeceb;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .icono-documento {
@@ -1368,7 +1564,7 @@ h2 {
   background: #ffeceb;
 }
 
-/* Acciones de una foto dentro de eliminados recientemente. */
+/* Acciones de fotos y documentos dentro de eliminados hace poco. */
 .archivo-eliminado {
   padding: 10px;
   border: 1px solid rgba(22, 31, 49, 0.12);
@@ -1515,6 +1711,28 @@ h2 {
 .tarjeta-nota small {
   color: #6c7485;
   font-size: 11px;
+}
+
+/* Botones para editar o eliminar una nota guardada. */
+.acciones-nota {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.acciones-nota button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 8px;
+  color: #0a84ff;
+  background: #e8f1ff;
+  font-weight: bold;
+}
+
+.acciones-nota .eliminar {
+  color: #ff3b30;
+  background: #ffeceb;
 }
 
 .editor-nota {
@@ -1781,4 +1999,2014 @@ h2 {
 .estado-proceso.terminado,
 .leyenda-estados .terminado {
   background: #ff375f;
+}
+
+
+/* ==========================================================
+   MEJORAS VISUALES TIPO IPHONE Y BLOQUEO DE APPS EXTERNAS
+   Estas reglas se agregan al final para no romper la estructura original.
+   ========================================================== */
+:root {
+  --ios-blue: #007aff;
+  --ios-green: #34c759;
+  --ios-red: #ff3b30;
+  --ios-orange: #ff9500;
+  --ios-yellow: #ffcc00;
+  --ios-gray: #8e8e93;
+  --ios-bg: #f2f2f7;
+  --ios-card: rgba(255, 255, 255, 0.88);
+  --ios-line: rgba(60, 60, 67, 0.16);
+  --ios-text: #1c1c1e;
+  --ios-muted: #6e6e73;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(0, 122, 255, 0.20), transparent 32%),
+    radial-gradient(circle at 82% 16%, rgba(191, 90, 242, 0.18), transparent 28%),
+    linear-gradient(145deg, #eef2f8 0%, #dde4ef 100%);
+  color: var(--ios-text);
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.escenario {
+  padding: 24px;
+}
+
+.telefono {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  padding: 11px;
+  border-radius: 58px;
+  background: linear-gradient(145deg, #1f2229, #050506 62%, #262932);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.08),
+    inset 0 0 0 8px rgba(0, 0, 0, 0.62),
+    0 32px 80px rgba(20, 25, 40, 0.34),
+    0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.telefono::before,
+.telefono::after {
+  content: "";
+  position: absolute;
+  background: #111318;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.telefono::before {
+  left: -4px;
+  top: 158px;
+  width: 4px;
+  height: 92px;
+  border-radius: 3px 0 0 3px;
+}
+
+.telefono::after {
+  right: -4px;
+  top: 208px;
+  width: 4px;
+  height: 112px;
+  border-radius: 0 3px 3px 0;
+}
+
+.pantalla {
+  border-radius: 47px;
+  background: var(--ios-bg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.pantalla::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  z-index: 40;
+  width: 132px;
+  height: 5px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.88);
+  pointer-events: none;
+}
+
+.isla-dinamica {
+  top: 11px;
+  width: 126px;
+  height: 36px;
+  border-radius: 999px;
+  background: #050506;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 2px 7px rgba(0, 0, 0, 0.45);
+}
+
+.isla-dinamica::after {
+  content: "";
+  position: absolute;
+  right: 21px;
+  top: 11px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #18233d 0 24%, #06070a 58%);
+}
+
+.barra-estado {
+  top: 18px;
+  left: 31px;
+  right: 27px;
+  color: white;
+  font-size: 12px;
+  letter-spacing: -0.2px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
+}
+
+.barra-estado.oscura {
+  color: #1d1d1f;
+  text-shadow: none;
+}
+
+.pantalla-bloqueo {
+  padding: 78px 24px 30px;
+  background:
+    radial-gradient(circle at 20% 23%, rgba(255, 255, 255, 0.55), transparent 8%),
+    radial-gradient(circle at 76% 20%, rgba(255, 255, 255, 0.25), transparent 11%),
+    radial-gradient(circle at 30% 78%, rgba(10, 132, 255, 0.65), transparent 26%),
+    linear-gradient(155deg, #4e8dff 0%, #7d5cff 34%, #ff7aa8 66%, #ffb36b 100%);
+}
+
+.bloqueo-encabezado p {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: -0.2px;
+}
+
+.bloqueo-encabezado h1 {
+  font-size: 82px;
+  font-weight: 700;
+  letter-spacing: -5px;
+}
+
+.panel-desbloqueo {
+  left: 24px;
+  right: 24px;
+  bottom: 34px;
+  padding: 16px 18px 18px;
+  border-radius: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 18px 40px rgba(20, 20, 35, 0.18);
+  backdrop-filter: blur(24px) saturate(1.8);
+}
+
+.puntos-pin {
+  gap: 15px;
+  margin: 7px 0 18px;
+}
+
+.puntos-pin span {
+  width: 11px;
+  height: 11px;
+  border: 1.4px solid rgba(255, 255, 255, 0.96);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+.teclado-pin {
+  gap: 10px 16px;
+}
+
+.teclado-pin button {
+  height: 54px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background: rgba(255, 255, 255, 0.23);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 4px 10px rgba(0, 0, 0, 0.10);
+  font-size: 23px;
+  font-weight: 500;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.teclado-pin button:active,
+.icono-app:active,
+.boton-icono:active,
+.boton-principal:active,
+.boton-gris:active {
+  transform: scale(0.96);
+}
+
+.mensaje-ayuda,
+.mensaje-bloqueo-temporal {
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+
+.pantalla-inicio {
+  padding: 74px 18px 112px;
+  background:
+    radial-gradient(circle at 19% 18%, rgba(255, 255, 255, 0.46), transparent 10%),
+    radial-gradient(circle at 82% 14%, rgba(255, 204, 0, 0.44), transparent 18%),
+    radial-gradient(circle at 24% 82%, rgba(52, 199, 89, 0.40), transparent 24%),
+    linear-gradient(148deg, #0a84ff 0%, #5e5ce6 36%, #bf5af2 62%, #ff9f0a 100%);
+}
+
+.capa-fondo {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.04) 32%, rgba(0, 0, 0, 0.16)),
+    radial-gradient(circle at 50% 110%, rgba(255, 255, 255, 0.22), transparent 48%);
+  backdrop-filter: blur(0.2px);
+}
+
+.inicio-encabezado {
+  min-height: 56px;
+  margin-bottom: 18px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.19);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(22px) saturate(1.5);
+}
+
+.inicio-encabezado h2 {
+  font-size: 22px;
+  letter-spacing: -0.6px;
+}
+
+/* Muestra en el inicio que usuario esta usando el iPhone. */
+.titulo-inicio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.usuario-inicio {
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #17623d;
+  background: rgba(48, 209, 88, 0.20);
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.usuario-inicio.invitado {
+  color: #8b4b00;
+  background: rgba(255, 159, 10, 0.22);
+}
+
+.texto-pequeno {
+  opacity: 0.62;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.boton-icono {
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.20);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  font-size: 15px;
+}
+
+#botonBloquear {
+  font-size: 18px;
+}
+
+.cuadricula-apps {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px 12px;
+  align-content: start;
+}
+
+.icono-app {
+  color: white;
+  border-radius: 18px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.icono-app:hover {
+  filter: brightness(1.04);
+}
+
+.burbuja-app,
+.icono-tienda {
+  width: 62px;
+  height: 62px;
+  border-radius: 17px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    0 10px 18px rgba(0, 0, 0, 0.18);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.icono-app span:last-child {
+  max-width: 78px;
+  margin-top: 2px;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.34);
+}
+
+.appstore {
+  background: linear-gradient(145deg, #35c8ff, #007aff 68%, #0051d5);
+}
+
+.procesos {
+  background: linear-gradient(145deg, #5ee284, #1db954 62%, #0b8b34);
+}
+
+.memoria {
+  background: linear-gradient(145deg, #ffcc00, #ff9500 58%, #ff3b30);
+}
+
+.archivos {
+  background: linear-gradient(145deg, #5ac8fa, #007aff);
+}
+
+.camara {
+  background: radial-gradient(circle at 50% 48%, #232326 0 21%, #b8c1ce 22% 30%, #050506 31% 100%);
+}
+
+.fotos {
+  background: conic-gradient(from 15deg, #ff3b30, #ff9500, #ffcc00, #34c759, #5ac8fa, #5856d6, #ff2d55, #ff3b30);
+}
+
+.entrada-salida {
+  background: linear-gradient(145deg, #64d2ff, #007aff 64%, #003b93);
+}
+
+.seguridad {
+  background: linear-gradient(145deg, #ff375f, #bf5af2 65%, #7f2bd9);
+}
+
+.ajustes {
+  background: linear-gradient(145deg, #c7c7cc, #636366 70%, #3a3a3c);
+}
+
+.recientes {
+  background: linear-gradient(145deg, #5856d6, #af52de 70%, #ff2d55);
+}
+
+.dock {
+  left: 16px;
+  right: 16px;
+  bottom: 22px;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.23);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  backdrop-filter: blur(26px) saturate(1.8);
+}
+
+.dock .burbuja-app {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+}
+
+.vista-app {
+  padding: 64px 15px 26px;
+  background: var(--ios-bg);
+}
+
+.app-encabezado {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  margin: -1px -1px 14px;
+  padding: 7px 4px 12px;
+  border-bottom: 1px solid rgba(60, 60, 67, 0.08);
+  background: rgba(242, 242, 247, 0.83);
+  backdrop-filter: blur(20px) saturate(1.5);
+}
+
+.app-encabezado h2,
+h2 {
+  color: var(--ios-text);
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.9px;
+}
+
+.app-encabezado .texto-pequeno {
+  color: var(--ios-muted);
+}
+
+.app-encabezado .boton-icono {
+  color: var(--ios-blue);
+  background: transparent;
+  box-shadow: none;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.contenido-app {
+  height: calc(100% - 68px);
+  padding: 0 2px 26px;
+  scrollbar-width: thin;
+}
+
+.tarjeta,
+.fila-proceso,
+.fila-subtarea,
+.fila-almacenamiento,
+.fila-tienda,
+.fila-ajuste,
+.tarjeta-reciente,
+.fila-dispositivo,
+.fila-carpeta,
+.archivo-foto,
+.archivo-documento,
+.archivo-eliminado,
+.fila-nota-carpeta,
+.tarjeta-nota,
+.editor-nota,
+.tarjeta-documento,
+.editor-documento {
+  border: 0;
+  border-radius: 18px;
+  background: var(--ios-card);
+  box-shadow: 0 1px 0 rgba(60, 60, 67, 0.08), 0 12px 25px rgba(30, 30, 45, 0.05);
+}
+
+.tarjeta {
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.tarjeta h3,
+.barra-notas h3,
+.barra-documentos h3,
+.cabecera-archivos h3 {
+  font-size: 18px;
+  letter-spacing: -0.4px;
+}
+
+.lista-vertical,
+.lista-ajustes,
+.explorador-archivos,
+.app-notas,
+.app-documentos {
+  gap: 10px;
+}
+
+.boton-principal,
+.boton-gris,
+.boton-guardar-nota,
+.boton-nuevo-documento,
+.boton-conexion,
+.acciones-archivo button,
+.acciones-eliminado button,
+.boton-cerrar-reciente {
+  min-height: 36px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+}
+
+.boton-principal,
+.boton-conexion,
+.acciones-archivo button {
+  background: var(--ios-blue);
+}
+
+.boton-gris {
+  color: var(--ios-blue);
+  background: rgba(0, 122, 255, 0.10);
+}
+
+.alerta,
+.mensaje-login,
+.mensaje-archivo,
+.evento-lru,
+.dato-planificador {
+  border: 0;
+  border-radius: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.alerta {
+  color: #7a4100;
+  background: rgba(255, 149, 0, 0.14);
+}
+
+/* App Store */
+.appstore-cabecera {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 13px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(239,246,255,0.90));
+}
+
+.appstore-cabecera p {
+  margin: 4px 0 0;
+  color: var(--ios-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.appstore-logo {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: white;
+  background: linear-gradient(145deg, #35c8ff, #007aff 70%);
+  box-shadow: 0 10px 18px rgba(0, 122, 255, 0.22);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.lista-appstore {
+  padding-bottom: 8px;
+}
+
+.fila-tienda {
+  grid-template-columns: auto 1fr auto;
+  min-height: 78px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.icono-tienda {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  color: white;
+  font-size: 25px;
+}
+
+.fila-tienda strong {
+  font-size: 15px;
+  letter-spacing: -0.2px;
+}
+
+.fila-tienda p {
+  color: var(--ios-muted);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.progreso-tienda {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(0, 122, 255, 0.11);
+}
+
+.progreso-tienda span {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--ios-blue), #64d2ff);
+}
+
+.bloqueo-instalacion-externa {
+  color: white;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(255, 255, 255, 0.25), transparent 24%),
+    linear-gradient(145deg, #1c1c1e, #2c2c2e 52%, #000);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16);
+}
+
+.bloqueo-instalacion-externa p {
+  margin: 9px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  line-height: 1.36;
+}
+
+.bloqueo-externo-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge-ios {
+  display: inline-grid;
+  place-items: center;
+  min-width: 42px;
+  height: 27px;
+  border-radius: 999px;
+  color: #111;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mensaje-externo {
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.boton-bloqueado-ios {
+  width: 100%;
+  min-height: 40px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  color: white;
+  background: var(--ios-red);
+  font-weight: 800;
+}
+
+/* Ajustes y listas tipo iOS */
+.lista-ajustes {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.fila-ajuste,
+.fila-seguridad,
+.fila-carpeta,
+.fila-nota-carpeta,
+.archivo-foto,
+.archivo-documento,
+.fila-almacenamiento,
+.tarjeta-reciente,
+.fila-dispositivo {
+  min-height: 50px;
+}
+
+.fila-ajuste strong,
+.fila-almacenamiento strong,
+.fila-seguridad strong {
+  color: var(--ios-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.icono-ajuste {
+  width: 31px;
+  height: 31px;
+  border-radius: 9px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.switch-ajuste {
+  background: #e5e5ea;
+}
+
+/* Cámara */
+.camara-contenido {
+  min-height: 100%;
+  padding: 10px;
+  border-radius: 26px;
+  background: #050506;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.visor-camara {
+  height: 492px;
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+}
+
+.enfoque-camara {
+  width: 74px;
+  height: 74px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+.controles-camara {
+  display: grid;
+  grid-template-columns: 54px 1fr 54px;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.boton-tomar-foto {
+  width: 72px;
+  height: 72px;
+  justify-self: center;
+  border: 5px solid rgba(255, 255, 255, 0.94);
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.30);
+}
+
+.boton-cambiar-camara,
+.miniatura-foto,
+.miniatura-vacia {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+}
+
+.boton-cambiar-camara {
+  border: 0;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 22px;
+}
+
+/* Fotos */
+.selector-album {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(118, 118, 128, 0.16);
+}
+
+.selector-album button {
+  min-height: 30px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--ios-muted);
+  background: transparent;
+  font-weight: 700;
+}
+
+.selector-album button.activo {
+  color: var(--ios-text);
+  background: white;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+}
+
+.cuadricula-fotos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.foto-galeria {
+  min-height: 98px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.foto-galeria span {
+  display: block;
+  padding: 7px;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.50);
+}
+
+/* Archivos y Notas */
+.buscador-archivos {
+  border-radius: 14px;
+  background: rgba(118, 118, 128, 0.14);
+  color: var(--ios-muted);
+}
+
+.titulo-grupo-archivos {
+  margin: 8px 0 5px 6px;
+  color: var(--ios-muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.grupo-archivos {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.ruta-volver {
+  color: var(--ios-blue);
+  font-size: 15px;
+}
+
+.icono-carpeta {
+  border-radius: 11px;
+  color: var(--ios-blue);
+  background: rgba(0, 122, 255, 0.11);
+}
+
+.editor-nota,
+.editor-documento {
+  background: white;
+}
+
+.titulo-nota {
+  font-size: 24px;
+  border-bottom: 1px solid var(--ios-line);
+}
+
+.contenido-nota,
+.contenido-documento {
+  line-height: 1.48;
+}
+
+.boton-guardar-nota {
+  color: #1c1c1e;
+  background: var(--ios-yellow);
+}
+
+.boton-nueva-nota,
+.boton-nuevo-documento {
+  color: white;
+  background: var(--ios-blue);
+}
+
+/* Procesos, memoria y seguridad */
+.estado-proceso,
+.estado-dispositivo {
+  border-radius: 999px;
+}
+
+.cpu-actual,
+.marco-memoria.ocupado,
+.pagina-virtual,
+.chip-lru,
+.mapa-marcos article,
+.mapa-paginas article {
+  border-radius: 15px;
+}
+
+.login-seguridad input {
+  border: 0;
+  border-radius: 14px;
+  background: rgba(118, 118, 128, 0.12);
+}
+
+.selector-usuario button,
+.boton-ajuste {
+  border-radius: 14px;
+}
+
+@media (max-width: 460px) {
+  .escenario {
+    padding: 0;
+  }
+
+  .telefono {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .telefono::before,
+  .telefono::after {
+    display: none;
+  }
+
+  .pantalla {
+    border-radius: 0;
+  }
+}
+
+/* Ajustes finales solicitados: barra de estado, botón de bloqueo, iconos reales estilizados y apps nuevas */
+.barra-estado {
+  align-items: center;
+  pointer-events: none;
+}
+
+.estado-derecha {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  min-width: 78px;
+}
+
+.senal-celular {
+  width: 19px;
+  height: 14px;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.senal-celular i {
+  width: 3px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.96;
+}
+
+.senal-celular i:nth-child(1) { height: 5px; }
+.senal-celular i:nth-child(2) { height: 8px; }
+.senal-celular i:nth-child(3) { height: 11px; }
+.senal-celular i:nth-child(4) { height: 14px; }
+
+.wifi-ios {
+  width: 17px;
+  height: 12px;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.wifi-ios::before,
+.wifi-ios::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.wifi-ios::before {
+  bottom: -7px;
+  width: 23px;
+  height: 23px;
+}
+
+.wifi-ios::after {
+  bottom: -3px;
+  width: 13px;
+  height: 13px;
+}
+
+.bateria-ios {
+  width: 25px;
+  height: 12px;
+  position: relative;
+  display: inline-block;
+  border: 1.8px solid currentColor;
+  border-radius: 4px;
+}
+
+.bateria-ios::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: -4px;
+  width: 2px;
+  height: 5px;
+  border-radius: 0 2px 2px 0;
+  background: currentColor;
+}
+
+.bateria-ios span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 6px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+#botonBloquear.boton-bloquear-home {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0;
+  overflow: hidden;
+}
+
+.cerradura-home {
+  width: 16px;
+  height: 13px;
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  background: currentColor;
+}
+
+.cerradura-home::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: -10px;
+  width: 10px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+}
+
+.burbuja-app,
+.icono-tienda {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.burbuja-app {
+  display: grid;
+  place-items: center;
+}
+
+.sim-logo {
+  width: 38px;
+  height: 38px;
+  position: relative;
+  display: block;
+  z-index: 1;
+}
+
+.icono-tienda .sim-logo {
+  width: 33px;
+  height: 33px;
+}
+
+.appstore { background: linear-gradient(145deg, #55d7ff 0%, #007aff 68%, #005bea 100%); }
+.safari { background: linear-gradient(145deg, #f9fbff 0%, #dfeeff 100%); }
+.procesos { background: linear-gradient(145deg, #34c759, #5ac8fa); }
+.memoria { background: linear-gradient(145deg, #ff9f0a, #ff453a); }
+.archivos { background: linear-gradient(180deg, #7cc8ff 0 33%, #0a84ff 34% 100%); }
+.camara { background: linear-gradient(145deg, #2c2c2e, #050506); }
+.fotos { background: #fff; }
+.entrada-salida { background: linear-gradient(145deg, #00c7be, #0a84ff); }
+.seguridad { background: linear-gradient(145deg, #ff375f, #bf5af2); }
+.ajustes { background: linear-gradient(145deg, #d1d1d6, #636366); }
+.recientes { background: linear-gradient(145deg, #5856d6, #af52de); }
+.instagram { background: radial-gradient(circle at 30% 100%, #feda75 0 18%, #fa7e1e 32%, #d62976 55%, #962fbf 75%, #4f5bd5 100%); }
+.whatsapp { background: linear-gradient(145deg, #49f17a, #20c45a 70%, #0fa64a); }
+.teams { background: linear-gradient(145deg, #8b8df5, #6264a7 68%, #444791); }
+.documentos { background: linear-gradient(145deg, #ffb340, #ff8a00); }
+.notas { background: linear-gradient(180deg, #fffdf8 0 34%, #ffd60a 35% 100%); }
+.app-generica { background: linear-gradient(145deg, #8e8e93, #3a3a3c); }
+
+.logo-appstore::before,
+.logo-appstore::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 17px;
+  width: 29px;
+  height: 5px;
+  border-radius: 6px;
+  background: #fff;
+  transform-origin: center;
+}
+.logo-appstore::before { transform: rotate(58deg); }
+.logo-appstore::after { transform: rotate(-58deg); }
+.logo-appstore {
+  background: linear-gradient(#fff, #fff) center 25px / 29px 5px no-repeat;
+}
+
+.logo-safari {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 0 55%, transparent 56%),
+    conic-gradient(from 25deg, #ff3b30 0 11%, #007aff 12% 50%, #e5f1ff 51% 100%);
+  box-shadow: inset 0 0 0 2px #0a84ff;
+}
+.logo-safari::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 5px;
+  width: 5px;
+  height: 29px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #ff3b30 0 50%, #0a84ff 51% 100%);
+  transform: rotate(42deg);
+}
+.logo-safari::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px #0a84ff;
+}
+
+.logo-instagram {
+  border: 3px solid white;
+  border-radius: 11px;
+}
+.logo-instagram::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 9px;
+  width: 14px;
+  height: 14px;
+  border: 3px solid white;
+  border-radius: 50%;
+}
+.logo-instagram::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: white;
+}
+
+.logo-whatsapp::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 4px solid white;
+  border-radius: 50%;
+}
+.logo-whatsapp::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 12px;
+  width: 12px;
+  height: 16px;
+  border: 4px solid white;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-radius: 0 0 12px 0;
+  transform: rotate(38deg);
+  box-shadow: -12px 13px 0 -7px white;
+}
+
+.logo-teams::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: #3f3d99;
+  box-shadow: 14px -8px 0 1px #9ea2ff, 23px 2px 0 3px #7678d8;
+}
+.logo-teams::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d7d8ff;
+  box-shadow: 17px 6px 0 -1px #c4c7ff;
+}
+
+.logo-fotos {
+  border-radius: 50%;
+  background: conic-gradient(#ff3b30 0 12.5%, #ff9500 12.5% 25%, #ffcc00 25% 37.5%, #34c759 37.5% 50%, #30d5c8 50% 62.5%, #0a84ff 62.5% 75%, #5856d6 75% 87.5%, #ff2d55 87.5% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 0 28%, #000 30% 64%, transparent 66%);
+  mask: radial-gradient(circle, transparent 0 28%, #000 30% 64%, transparent 66%);
+}
+.logo-fotos::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+}
+
+.logo-camara {
+  border-radius: 50%;
+  background: radial-gradient(circle, #111 0 22%, #6d7582 23% 31%, #030304 32% 100%);
+  box-shadow: 0 0 0 5px #d8dce2, 0 0 0 8px rgba(255,255,255,0.20);
+}
+
+.logo-archivos::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 9px;
+  width: 31px;
+  height: 24px;
+  border-radius: 5px;
+  background: #fff;
+}
+.logo-archivos::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 15px;
+  height: 9px;
+  border-radius: 5px 5px 0 0;
+  background: #fff;
+}
+
+.logo-ajustes {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #70747b 0 21%, white 22% 34%, transparent 35%),
+    repeating-conic-gradient(white 0 9deg, transparent 9deg 18deg);
+}
+.logo-procesos {
+  border: 3px solid white;
+  border-radius: 9px;
+  background:
+    linear-gradient(90deg, white 0 2px, transparent 2px 8px) 5px 8px / 24px 4px repeat-x,
+    linear-gradient(white 0 2px, transparent 2px 8px) 8px 5px / 4px 24px repeat-y;
+}
+.logo-diagnostico {
+  border-radius: 10px;
+  background: rgba(255,255,255,0.22);
+  box-shadow: inset 0 0 0 3px #fff;
+}
+.logo-diagnostico::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 18px;
+  width: 28px;
+  height: 3px;
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0 -8px 0 -1px white, 0 8px 0 -1px white;
+}
+.logo-dispositivos::before,
+.logo-dispositivos::after {
+  content: "";
+  position: absolute;
+  border: 3px solid white;
+  border-left: 0;
+  border-bottom: 0;
+  transform: rotate(45deg);
+}
+.logo-dispositivos::before { left: 6px; top: 11px; width: 15px; height: 15px; }
+.logo-dispositivos::after { right: 6px; top: 11px; width: 15px; height: 15px; }
+.logo-seguridad {
+  clip-path: polygon(50% 3%, 84% 17%, 78% 63%, 50% 92%, 22% 63%, 16% 17%);
+  background: white;
+}
+.logo-recientes::before,
+.logo-recientes::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 29px;
+  border: 3px solid white;
+  border-radius: 7px;
+}
+.logo-recientes::before { left: 4px; top: 7px; opacity: 0.72; }
+.logo-recientes::after { right: 4px; top: 2px; background: rgba(255,255,255,0.18); }
+.logo-notas::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 26px;
+  height: 22px;
+  background: repeating-linear-gradient(180deg, #262626 0 2px, transparent 2px 7px);
+}
+.logo-documentos::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 5px;
+  width: 21px;
+  height: 29px;
+  border-radius: 4px;
+  background: white;
+}
+.logo-documentos::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  border-top: 9px solid #ffd3a1;
+  border-left: 9px solid transparent;
+}
+.logo-generico::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 9px;
+  border: 3px solid white;
+}
+
+.appstore-logo-contenedor .burbuja-app {
+  width: 58px;
+  height: 58px;
+  margin: 0;
+}
+
+/* Fotos con eliminación y recuperados */
+.foto-galeria {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.foto-datos {
+  padding: 7px;
+}
+
+.foto-datos small {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255,255,255,0.88);
+  font-size: 8px;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.55);
+}
+
+.acciones-foto {
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.38));
+}
+
+.boton-foto {
+  min-height: 24px;
+  border: 0;
+  border-radius: 8px;
+  color: #111;
+  background: rgba(255,255,255,0.90);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.boton-foto.eliminar {
+  color: white;
+  background: rgba(255,59,48,0.92);
+}
+
+.mensaje-fotos,
+.mensaje-app,
+.mensaje-externo {
+  margin: 8px 0 0;
+  padding: 9px 10px;
+  border-radius: 12px;
+  color: #174867;
+  background: rgba(0,122,255,0.10);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* Apps nuevas: Safari, Instagram, WhatsApp y Teams */
+.tabs-app {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: rgba(118,118,128,0.14);
+}
+
+.tabs-app button {
+  min-height: 31px;
+  border: 0;
+  border-radius: 11px;
+  padding: 0 11px;
+  color: var(--ios-muted);
+  background: transparent;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tabs-app button.activo {
+  color: var(--ios-text);
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.barra-safari {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 18px;
+  background: rgba(118,118,128,0.14);
+}
+
+.barra-safari input,
+.compositor-chat input,
+.crear-post textarea {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  border-radius: 12px;
+  padding: 10px 11px;
+  background: white;
+  color: var(--ios-text);
+  font-family: inherit;
+}
+
+.candado-safari {
+  width: 13px;
+  height: 11px;
+  position: relative;
+  display: inline-block;
+  border-radius: 3px;
+  background: #34c759;
+}
+.candado-safari::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: -7px;
+  width: 7px;
+  height: 8px;
+  border: 2px solid #34c759;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.navegador-ios .boton-principal,
+.navegador-ios .boton-bloqueado-ios {
+  margin-top: 9px;
+  margin-right: 6px;
+}
+
+.historial-safari {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.chip-safari {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(0,122,255,0.10);
+  color: var(--ios-blue);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.post-instagram,
+.perfil-instagram,
+.cabecera-chat,
+.fila-team,
+.equipo-teams {
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+}
+
+.post-instagram {
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.post-top,
+.perfil-top,
+.cabecera-chat,
+.fila-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.imagen-post {
+  height: 210px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.65), transparent 18%),
+    linear-gradient(145deg, #fd1d1d, #833ab4 55%, #fcb045);
+}
+
+.post-instagram p,
+.post-instagram small,
+.perfil-instagram p,
+.cabecera-chat p,
+.fila-team p,
+.equipo-teams p {
+  margin: 3px 12px 12px;
+  color: var(--ios-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.post-instagram p {
+  color: var(--ios-text);
+  font-size: 13px;
+}
+
+.avatar-ig,
+.avatar-wa {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffd60a, #ff375f 50%, #5856d6);
+}
+
+.avatar-ig.grande {
+  width: 70px;
+  height: 70px;
+}
+
+.avatar-wa {
+  background: #25d366;
+  position: relative;
+}
+.avatar-wa::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 3px solid white;
+  border-radius: 50%;
+}
+
+.metricas-ig {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  padding: 12px;
+  border-top: 1px solid var(--ios-line);
+  border-bottom: 1px solid var(--ios-line);
+}
+
+.metricas-ig strong,
+.metricas-ig small {
+  display: block;
+}
+.metricas-ig small {
+  color: var(--ios-muted);
+  font-size: 11px;
+}
+
+.crear-post textarea {
+  min-height: 120px;
+  resize: vertical;
+  background: rgba(118,118,128,0.10);
+  margin-bottom: 10px;
+}
+
+.chat-app {
+  display: grid;
+  gap: 8px;
+  max-height: 395px;
+  overflow: auto;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(118,118,128,0.10);
+}
+
+.burbuja-chat {
+  max-width: 84%;
+  padding: 9px 11px;
+  border-radius: 16px 16px 16px 4px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.burbuja-chat.yo {
+  justify-self: end;
+  color: white;
+  background: var(--ios-blue);
+  border-radius: 16px 16px 4px 16px;
+}
+
+.burbuja-chat strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11px;
+}
+
+.burbuja-chat p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.compositor-chat {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.acciones-whatsapp {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.teams-tabs {
+  padding-bottom: 5px;
+}
+
+.fila-team {
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+
+.fila-team p {
+  margin: 3px 0 0;
+}
+
+.badge-team {
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: white;
+  background: #6264a7;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.boton-ancho {
+  width: 100%;
+}
+
+/* Ajustes v4: WiFi optimizado, iconos más limpios y selección múltiple en Fotos */
+.estado-derecha {
+  gap: 6px;
+  min-width: 74px;
+}
+
+.wifi-ios {
+  width: 18px;
+  height: 13px;
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+  background:
+    radial-gradient(ellipse at 50% 100%, currentColor 0 2.1px, transparent 2.3px),
+    radial-gradient(ellipse at 50% 100%, transparent 0 5.2px, currentColor 5.35px 6.8px, transparent 7px),
+    radial-gradient(ellipse at 50% 100%, transparent 0 9.3px, currentColor 9.45px 10.9px, transparent 11.1px);
+}
+
+.wifi-ios::before,
+.wifi-ios::after {
+  content: none;
+}
+
+.burbuja-app {
+  width: 61px;
+  height: 61px;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -10px 18px rgba(0,0,0,0.08),
+    0 10px 24px rgba(0,0,0,0.18);
+}
+
+.dock .burbuja-app {
+  width: 56px;
+  height: 56px;
+}
+
+.icono-tienda {
+  border-radius: 13px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.30), 0 4px 10px rgba(0,0,0,0.10);
+}
+
+.sim-logo {
+  width: 39px;
+  height: 39px;
+}
+
+.icono-tienda .sim-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.appstore {
+  background: linear-gradient(145deg, #5fe0ff 0%, #0a84ff 58%, #0066dd 100%);
+}
+
+.logo-appstore {
+  background: linear-gradient(#fff, #fff) center 26px / 30px 5px no-repeat;
+}
+
+.logo-appstore::before,
+.logo-appstore::after {
+  left: 5px;
+  top: 17px;
+  width: 30px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+.logo-appstore::before {
+  transform: rotate(58deg);
+}
+
+.logo-appstore::after {
+  transform: rotate(-58deg);
+}
+
+.safari {
+  background: linear-gradient(145deg, #ffffff 0%, #e9f4ff 100%);
+}
+
+.logo-safari {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 0 20%, transparent 21%),
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,0.72) 0 3deg, transparent 3deg 18deg),
+    conic-gradient(from 36deg, #ff3b30 0 7%, #ffffff 7% 9%, #007aff 9% 57%, #eaf5ff 57% 100%);
+  box-shadow: inset 0 0 0 2.5px #0a84ff, inset 0 0 0 5px rgba(255,255,255,0.65);
+}
+
+.logo-safari::before {
+  left: 18px;
+  top: 4px;
+  width: 4px;
+  height: 31px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff3b30 0 49%, #0a84ff 50% 100%);
+  transform: rotate(43deg);
+}
+
+.logo-safari::after {
+  left: 16px;
+  top: 16px;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  box-shadow: 0 0 0 1.5px #0a84ff;
+}
+
+.logo-instagram {
+  border: 3px solid #fff;
+  border-radius: 12px;
+}
+
+.logo-instagram::before {
+  left: 9px;
+  top: 9px;
+  width: 15px;
+  height: 15px;
+  border: 3px solid #fff;
+}
+
+.logo-instagram::after {
+  right: 6px;
+  top: 6px;
+  width: 5px;
+  height: 5px;
+}
+
+.logo-whatsapp::before {
+  inset: 3px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow: -7px 18px 0 -9px #fff;
+}
+
+.logo-whatsapp::after {
+  left: 14px;
+  top: 12px;
+  width: 11px;
+  height: 15px;
+  border: 4px solid #fff;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-radius: 0 0 12px 0;
+  transform: rotate(35deg);
+  box-shadow: none;
+}
+
+.logo-teams::before {
+  content: "T";
+  left: 4px;
+  top: 11px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: #fff;
+  background: #4642a0;
+  font-size: 15px;
+  font-weight: 900;
+  box-shadow: 15px -8px 0 1px #a8adff, 24px 3px 0 3px #7476d9;
+}
+
+.logo-teams::after {
+  left: 19px;
+  top: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #f4f4ff;
+  box-shadow: 17px 6px 0 -1px #ececff;
+}
+
+.logo-fotos {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #ffffff 0 7px, transparent 8px),
+    conic-gradient(#ff3b30 0 12.5%, #ff9500 12.5% 25%, #ffcc00 25% 37.5%, #34c759 37.5% 50%, #30d5c8 50% 62.5%, #0a84ff 62.5% 75%, #5856d6 75% 87.5%, #ff2d55 87.5% 100%);
+  -webkit-mask: none;
+  mask: none;
+  transform: rotate(8deg);
+}
+
+.logo-fotos::after {
+  content: none;
+}
+
+.logo-camara {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #0b0b0d 0 22%, #52606f 23% 33%, #15161a 34% 100%);
+  box-shadow: 0 0 0 5px #d9dde4, 0 0 0 8px rgba(255,255,255,0.28);
+}
+
+.logo-camara::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d9dde4;
+}
+
+.logo-archivos::before {
+  left: 4px;
+  top: 10px;
+  width: 31px;
+  height: 24px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.07);
+}
+
+.logo-archivos::after {
+  left: 5px;
+  top: 6px;
+  width: 16px;
+  height: 9px;
+  border-radius: 5px 5px 0 0;
+  background: #fff;
+}
+
+.logo-ajustes {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #777b82 0 18%, #f7f7f7 19% 31%, transparent 32%),
+    repeating-conic-gradient(#f8f8f8 0 9deg, transparent 9deg 18deg),
+    radial-gradient(circle, #8e8e93 0 58%, transparent 59%);
+}
+
+.logo-seguridad {
+  clip-path: polygon(50% 2%, 85% 17%, 79% 62%, 50% 94%, 21% 62%, 15% 17%);
+  background: linear-gradient(180deg, #fff 0%, #e7e7ec 100%);
+  box-shadow: inset 0 -4px 8px rgba(0,0,0,0.15);
+}
+
+.cabecera-fotos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.boton-seleccionar-fotos {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #0a84ff;
+  background: rgba(0,122,255,0.10);
+}
+
+.barra-acciones-fotos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(118,118,128,0.12);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.barra-acciones-fotos .boton-foto {
+  min-height: 32px;
+  padding: 0 12px;
+}
+
+.foto-galeria[data-seleccionar-foto] {
+  cursor: pointer;
+}
+
+.foto-galeria.seleccionada {
+  outline: 3px solid #0a84ff;
+  outline-offset: 2px;
+}
+
+.marca-seleccion-foto {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255,255,255,0.9);
+  border-radius: 50%;
+  color: white;
+  background: rgba(0,0,0,0.20);
+  font-size: 14px;
+  font-weight: 900;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+}
+
+.foto-galeria.seleccionada .marca-seleccion-foto {
+  border-color: #0a84ff;
+  background: #0a84ff;
+}
+
+.boton-foto:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.navegador-ios h3 {
+  margin-bottom: 6px;
+}
+
+/* v5: foto recibida por WhatsApp y guardada en Fotos */
+.acciones-whatsapp .boton-ancho {
+  grid-column: 1 / -1;
+}
+
+.foto-chat {
+  padding-bottom: 10px;
+}
+
+.preview-perro-whatsapp {
+  position: relative;
+  width: 180px;
+  height: 140px;
+  margin: 6px 0 7px;
+  overflow: hidden;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 44% 53%, #111 0 3px, transparent 4px),
+    radial-gradient(circle at 57% 53%, #111 0 3px, transparent 4px),
+    radial-gradient(ellipse at 50% 65%, #3a2416 0 6px, transparent 7px),
+    radial-gradient(ellipse at 50% 58%, #f3c08d 0 30px, transparent 31px),
+    radial-gradient(ellipse at 35% 43%, #8b5a34 0 18px, transparent 19px),
+    radial-gradient(ellipse at 65% 43%, #8b5a34 0 18px, transparent 19px),
+    radial-gradient(ellipse at 50% 50%, #d99354 0 43px, transparent 44px),
+    linear-gradient(180deg, #bfe8ff 0 56%, #7ccc78 57% 100%);
+  box-shadow: inset 0 -28px 35px rgba(0,0,0,0.12);
+}
+
+.preview-perro-whatsapp::before {
+  content: "";
+  position: absolute;
+  left: 67px;
+  top: 94px;
+  width: 46px;
+  height: 15px;
+  border-radius: 50%;
+  background: rgba(70, 45, 25, 0.25);
+}
+
+.foto-perro {
+  position: relative;
+  background:
+    radial-gradient(circle at 44% 51%, #111 0 3px, transparent 4px),
+    radial-gradient(circle at 57% 51%, #111 0 3px, transparent 4px),
+    radial-gradient(ellipse at 50% 62%, #3a2416 0 6px, transparent 7px),
+    radial-gradient(ellipse at 50% 58%, #f7c993 0 28px, transparent 29px),
+    radial-gradient(ellipse at 35% 42%, #8b5a34 0 17px, transparent 18px),
+    radial-gradient(ellipse at 65% 42%, #8b5a34 0 17px, transparent 18px),
+    radial-gradient(ellipse at 50% 48%, #d79555 0 42px, transparent 43px),
+    linear-gradient(180deg, #bfe8ff 0 56%, #7ccc78 57% 100%);
+}
+
+.foto-perro::before {
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: 15%;
+  height: 9%;
+  border-radius: 50%;
+  background: rgba(70, 45, 25, 0.18);
+}
+
+.foto-perro .foto-datos,
+.foto-perro .acciones-foto,
+.foto-perro span {
+  position: relative;
+  z-index: 2;
 }
